@@ -1,0 +1,2 @@
+scripts:
+  start: deno run --allow-net --config tsconfig.json --allow-env --unstable --allow-write --allow-plugin  --allow-read app.ts
