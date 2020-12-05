@@ -42,4 +42,8 @@ export default class Post {
 
     return true;
   }
+
+  static getSinglePost(id: string) {
+    return PostCollection.findOne({ _id: { $oid: id } });
+  }
 }

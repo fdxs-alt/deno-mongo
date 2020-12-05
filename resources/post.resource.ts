@@ -1,31 +1,35 @@
-import { RequestWithID } from "./middleware/request.d.ts";
-import { Drash, format } from "./deps.ts";
-import JwtMiddleware from "./middleware/jwt.middleware.ts";
+import { Drash } from "../deps.ts";
 import Post from "../mongo/post.ts";
+import { createHttpError } from "./helpers/errors.helpers.ts";
 
-@Drash.Http.Middleware({
-  before_request: [JwtMiddleware],
-  after_request: [],
-})
 export default class PostResource extends Drash.Http.Resource {
-  static paths = ["/posts"];
+  static paths = ["/post/:id"];
 
-  public async POST() {
-    const title = (this.request.getBodyParam("title") as string) || "";
-    const content = (this.request.getBodyParam("content") as string) || "";
+  public async GET() {
+    const id = this.request.getPathParam("id") as string;
 
-    const {
-      _id: { $oid },
-    } = this.request as RequestWithID;
+    try {
+      const singlePost = await Post.getSinglePost(id);
 
-    const date = format(new Date(), "do MMMM u HH:mm", {});
+      this.response.body = singlePost;
+      
+      return this.response;
+    } catch (error) {
+      throw createHttpError(500, "Error occured");
+    }
+  }
 
-    const post = new Post(title, content, date, $oid);
+  public async DELETE() {
+    const id = this.request.getPathParam("id") as string;
 
-    const _id = await post.create();
+    try {
+      await Post.removePost(id);
 
-    this.response.body = { _id, ...post };
+      this.response.body = { success: true };
 
-    return this.response;
+      return this.response;
+    } catch (error) {
+      throw createHttpError(500, "Error occured");
+    }
   }
 }

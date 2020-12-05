@@ -15,7 +15,7 @@ export default class LoginResource extends Drash.Http.Resource {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return createHttpError(400, "Cannot identify user");
+      throw createHttpError(400, "Cannot identify user");
     }
 
     const { password, ...rest } = user;
@@ -30,7 +30,6 @@ export default class LoginResource extends Drash.Http.Resource {
       const jwtToken = await generateToken(rest._id);
 
       this.response.body = { ...rest, jwtToken };
-
       return this.response;
     } catch (error) {
       throw createHttpError(500, "Something went wrong");
