@@ -7,5 +7,6 @@ export interface PostSchema {
   _id: { $oid: string };
   title: string;
   content: string;
-  date: Date;
+  date: string;
+  author: string;
 }

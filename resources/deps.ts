@@ -7,3 +7,4 @@ export {
 } from "https://deno.land/x/djwt@v1.9/mod.ts";
 export type { Payload, Header } from "https://deno.land/x/djwt@v1.9/mod.ts";
 export { config } from "https://deno.land/x/dotenv/mod.ts";
+export { format } from "https://deno.land/x/date_fns@v2.15.0/index.js";

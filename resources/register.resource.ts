@@ -2,6 +2,9 @@ import { createHttpError } from "./helpers/errors.helpers.ts";
 import { Drash, hash } from "./deps.ts";
 import User from "../mongo/user.ts";
 import { generateToken } from "./helpers/jwt.helpers.ts";
+import JwtMiddleware from "./middleware/jwt.middleware.ts";
+import { RequestWithID } from "./middleware/request.d.ts";
+import Post from "../mongo/post.ts";
 export default class RegisterResource extends Drash.Http.Resource {
   static paths = ["/register"];
 
@@ -37,6 +40,24 @@ export default class RegisterResource extends Drash.Http.Resource {
       return this.response;
     } catch (error) {
       throw createHttpError(500, "Something went wrong");
+    }
+  }
+
+  @Drash.Http.Middleware({
+    before_request: [JwtMiddleware],
+  })
+  public async DELETE() {
+    const { _id } = this.request as RequestWithID;
+
+    try {
+      await Post.removeAllUserPosts(_id.$oid);
+      await User.remove({ _id });
+
+      this.response.body = { success: true };
+
+      return this.response;
+    } catch (error) {
+      throw createHttpError(500, "Error occured");
     }
   }
 }
