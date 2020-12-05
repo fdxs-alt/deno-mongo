@@ -1,5 +1,7 @@
+import { createHttpError } from "./helpers/errors.helpers.ts";
 import { Drash, hash } from "./deps.ts";
 import User from "../mongo/user.ts";
+import { generateToken } from "./helpers/jwt.helpers.ts";
 export default class RegisterResource extends Drash.Http.Resource {
   static paths = ["/register"];
 
@@ -8,23 +10,17 @@ export default class RegisterResource extends Drash.Http.Resource {
     const password = (this.request.getBodyParam("password") as string) || "";
 
     if (!email) {
-      throw new Drash.Exceptions.HttpException(
-        400,
-        "You need to provide email"
-      );
+      throw createHttpError(400, "You need to provide email");
     }
 
     if (!password) {
-      throw new Drash.Exceptions.HttpException(
-        400,
-        "You need to provide password"
-      );
+      throw createHttpError(400, "You need to provide password");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      throw new Drash.Exceptions.HttpException(400, "User already exists");
+      throw createHttpError(400, "User already exists");
     }
 
     const hashedPassword = await hash(password);
@@ -33,8 +29,14 @@ export default class RegisterResource extends Drash.Http.Resource {
 
     const id = await newUser.create();
 
-    this.response.body = { ...newUser, ...id };
+    try {
+      const jwtToken = await generateToken(id);
 
-    return this.response;
+      this.response.body = { email, id, jwtToken };
+
+      return this.response;
+    } catch (error) {
+      throw createHttpError(500, "Something went wrong");
+    }
   }
 }

@@ -1,9 +1,10 @@
 import { Drash } from "./deps.ts";
+import LoginResource from "./resources/login.resource.ts";
 import PostResource from "./resources/post.resource.ts";
 import RegisterResource from "./resources/register.resource.ts";
 
 const server = new Drash.Http.Server({
-  resources: [RegisterResource, PostResource],
+  resources: [RegisterResource, PostResource, LoginResource],
 });
 
 const PORT = 5000;

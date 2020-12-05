@@ -2,7 +2,7 @@ import { UserCollection } from "./mongo.ts";
 
 interface IParams {
   _id?: { $oid: string };
-  email: string;
+  email?: string;
 }
 
 export default class User {
@@ -18,7 +18,23 @@ export default class User {
     return UserCollection.findOne(params);
   }
 
+  static find(params: IParams) {
+    return UserCollection.find(params);
+  }
+
   create() {
     return UserCollection.insertOne(this);
+  }
+
+  static remove(params: IParams) {
+    return UserCollection.deleteOne(params);
+  }
+
+  static updatePassword({ _id }: IParams, password: string) {
+    return UserCollection.updateOne({ $where: _id?.$oid }, { password });
+  }
+
+  static updateEmail({ _id }: IParams, email: string) {
+    return UserCollection.updateOne({ $where: _id?.$oid }, { email });
   }
 }
