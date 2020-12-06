@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Login from "./components/Login";
 const App: React.FC = (): JSX.Element => {
-  const [clicked, setClicked] = useState(false);
   return (
-    <div>
-      <h1>{clicked ? "Clicked" : "Click button please"}</h1>
-      <button onClick={() => setClicked((prev) => !prev)}>
-        Click me to change h1
-      </button>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/" component={Login} />
+      </Switch>
+    </Router>
   );
 };
 
