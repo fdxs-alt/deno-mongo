@@ -3,5 +3,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true
-  }
+  },
+  "exclude": ["./client"]
 }
