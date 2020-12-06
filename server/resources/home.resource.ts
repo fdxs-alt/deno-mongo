@@ -8,11 +8,12 @@ export default class HomeResource extends Drash.Http.Resource {
 
   public GET() {
     try {
-      const fileContentsRaw = Deno.readFileSync("../client/index.html");
+      const fileContentsRaw = Deno.readFileSync("../client/build/index.html");
       const template = decoder.decode(fileContentsRaw);
       this.response.body = template;
       return this.response;
     } catch (error) {
+      console.log(error);
       throw createHttpError(400, "Error reading HTML template");
     }
   }
