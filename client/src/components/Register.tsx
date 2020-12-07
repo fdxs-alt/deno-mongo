@@ -1,15 +1,16 @@
+import { Typography, InputLabel, Input, Button, Link } from "@material-ui/core";
 import React from "react";
-import { Input, InputLabel, Typography, Link, Button } from "@material-ui/core";
 import { Controller, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { useStyles, CenteredBox } from "../style/login";
+import { CenteredBox, useStyles } from "../style/login";
 
 interface IInput {
   email: string;
   password: string;
+  repeatPassword: string;
 }
 
-const Login: React.FC = (): JSX.Element => {
+const Register: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const { handleSubmit, control } = useForm<IInput>();
@@ -46,13 +47,27 @@ const Login: React.FC = (): JSX.Element => {
           placeholder="example@example.com"
           rules={{ required: true }}
         />
+
+        <InputLabel className={classes.label}>Repeat password</InputLabel>
+        <Controller
+          as={Input}
+          name="repeatPassword"
+          control={control}
+          defaultValue=""
+          className={classes.input}
+          required
+          type="password"
+          placeholder="example@example.com"
+          rules={{ required: true }}
+        />
+
         <Button
           type="submit"
           className={classes.button}
           variant="contained"
           color="primary"
         >
-          Log in
+          Register
         </Button>
         <Link
           color="primary"
@@ -60,11 +75,11 @@ const Login: React.FC = (): JSX.Element => {
           className={classes.link}
           onClick={() => history.push("/register")}
         >
-          Register now!
+          Already have an account? Sign in
         </Link>
       </form>
     </CenteredBox>
   );
 };
 
-export default Login;
+export default Register;
