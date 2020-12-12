@@ -5,9 +5,7 @@ Instalation:
 git clone https://github.com/fdxs-alt/deno-mongo.git
 cd deno-mongo
 ```
-Add .env file with:
-MONGODB_URI = 
-JWT_SECRET = 
+Add .env file with MONGODB_URI, JWT_SECRET.
 Run:
 ```
 vr start
