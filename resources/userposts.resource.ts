@@ -1,7 +1,11 @@
 import Post from "../mongo/post.ts";
 import { Drash } from "./deps.ts";
 import { createHttpError } from "./helpers/errors.helpers.ts";
+import JwtMiddleware from "./middleware/jwt.middleware.ts";
 
+@Drash.Http.Middleware({
+  before_request: [JwtMiddleware],
+})
 export default class UserPostsResource extends Drash.Http.Resource {
   static paths = ["/posts/:id/:skip"];
 

@@ -1,11 +1,12 @@
-import { Drash } from "./deps.ts";
-import HomeResource from "./resources/home.resource.ts";
+import { Dexter, Drash, Paladin } from "./deps.ts";
 import LoginResource from "./resources/login.resource.ts";
 import PostResource from "./resources/post.resource.ts";
 import PostsResource from "./resources/posts.resource.ts";
 import RegisterResource from "./resources/register.resource.ts";
 import UserPostsResource from "./resources/userposts.resource.ts";
 
+const paladin = Paladin();
+const dexter = Dexter();
 const server = new Drash.Http.Server({
   resources: [
     RegisterResource,
@@ -13,8 +14,11 @@ const server = new Drash.Http.Server({
     LoginResource,
     UserPostsResource,
     PostResource,
-    HomeResource,
   ],
+  middleware: {
+    before_request: [dexter],
+    after_request: [paladin, dexter],
+  },
 });
 
 const PORT = 5000;
